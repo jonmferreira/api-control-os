@@ -6,4 +6,5 @@ public sealed record AuthenticationResultDto(
     string Email,
     string Role,
     string AccessToken,
-    DateTimeOffset ExpiresAt);
+    DateTimeOffset ExpiresAt,
+    int ExpiresIn); // Segundos até expiração

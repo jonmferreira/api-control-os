@@ -103,6 +103,36 @@ using (var scope = app.Services.CreateScope())
     if (dbContext.Database.IsRelational())
     {
         dbContext.Database.Migrate();
+
+        // Seed test users if they don't exist
+        var passwordHasher = scope.ServiceProvider.GetRequiredService<ServiceOrders.Application.Abstractions.Security.IPasswordHasher>();
+        var userRepo = scope.ServiceProvider.GetRequiredService<ServiceOrders.Domain.Repositories.IUserRepository>();
+
+        var testUsers = new[]
+        {
+            ("tecnico@os.app.br", "Técnico de Campo", "Technician", "Admin@123"),
+            ("responsavel@os.app.br", "Responsável", "Technician", "Admin@123"),
+            ("gerente@os.app.br", "Gerente", "Admin", "Admin@123")
+        };
+
+        foreach (var (email, name, role, password) in testUsers)
+        {
+            var existing = await userRepo.GetByEmailAsync(email.ToLowerInvariant(), default);
+            if (existing == null)
+            {
+                var hash = passwordHasher.HashPassword(password);
+                var user = new ServiceOrders.Domain.Entities.User(
+                    Guid.NewGuid(),
+                    name,
+                    email,
+                    hash,
+                    role,
+                    true,
+                    DateTimeOffset.UtcNow
+                );
+                await userRepo.AddAsync(user, default);
+            }
+        }
     }
 }
 

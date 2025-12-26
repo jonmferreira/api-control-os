@@ -45,6 +45,9 @@ public sealed class AuthService : IAuthService
 
         var token = _jwtTokenGenerator.GenerateToken(user);
 
-        return new AuthenticationResultDto(user.Id, user.Name, user.Email, user.Role, token.Token, token.ExpiresAt);
+        // Calcular segundos até expiração
+        var expiresIn = (int)(token.ExpiresAt - DateTimeOffset.UtcNow).TotalSeconds;
+
+        return new AuthenticationResultDto(user.Id, user.Name, user.Email, user.Role, token.Token, token.ExpiresAt, expiresIn);
     }
 }
