@@ -1,0 +1,3 @@
+@ServiceOrders_Api_HostAddress = http://localhost:5186
+
+GET {{ServiceOrders_Api_HostAddress}}/swagger
