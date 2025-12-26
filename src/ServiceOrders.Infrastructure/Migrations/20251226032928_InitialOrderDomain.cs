@@ -196,7 +196,7 @@ namespace ServiceOrders.Infrastructure.Migrations
                         column: x => x.ChecklistTemplateItemId,
                         principalTable: "ChecklistTemplateItems",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
